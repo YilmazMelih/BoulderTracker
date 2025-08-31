@@ -62,6 +62,36 @@ router.post("/", authenticateToken, async (req, res) => {
 router.get("/", authenticateToken, async (req, res) => {
     //Extract sessionID
     const { sessionId } = req.params;
+    //Build query using query params
+    let query = `SELECT climbs.*, climb_logs.* FROM climb_logs JOIN climbs ON climb_logs.climb_id = climbs.id WHERE climb_logs.session_id = ?`;
+    let params = [sessionId];
+    const { sort, order, flashed, topped, grade, grade_to, grade_from } = req.query;
+
+    if (flashed == "true") {
+        query += ` AND flashed != false`;
+    }
+    if (topped == "true") {
+        query += ` AND topped != false`;
+    }
+    if (grade) {
+        query += ` AND grade=?`;
+        params.push(grade.toLowerCase());
+    }
+    if (grade_to) {
+        query += ` AND grade<=?`;
+        params.push(grade_to.toLowerCase());
+    }
+    if (grade_from) {
+        query += ` AND grade>=?`;
+        params.push(grade_from.toLowerCase());
+    }
+
+    if (sort) {
+        const sortOrder = order && order.toLowerCase() == "desc" ? "DESC" : "ASC";
+        const sortBy = ["name", "grade"].includes(sort.toLowerCase()) ? sort.toLowerCase() : "id";
+        query += `ORDER BY ${sortBy} ${sortOrder}`;
+    }
+
     let db;
     try {
         //Verify session belongs to user
@@ -75,10 +105,7 @@ router.get("/", authenticateToken, async (req, res) => {
         }
 
         //Return logs and climb attached to logs belonging to user
-        const logs = await db.all(
-            `SELECT climbs.*, climb_logs.* FROM climb_logs JOIN climbs ON climb_logs.climb_id = climbs.id WHERE climb_logs.session_id = ?`,
-            [sessionId]
-        );
+        const logs = await db.all(query, params);
         res.json({ logs });
     } catch (err) {
         console.error("Error fetching climbs from log", err);

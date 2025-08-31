@@ -44,10 +44,28 @@ router.post("/", authenticateToken, async (req, res) => {
 
 //GET route, returns all sessions belonging to user if authenticated
 router.get("/", authenticateToken, async (req, res) => {
+    //Build query using query params
+    let query = `SELECT * FROM sessions WHERE user_id=?`;
+    let params = [req.user.userId];
+    const { on, to, from } = req.query;
+    if (on) {
+        query += ` AND date = ?`;
+        params.push(on);
+    }
+    if (from) {
+        query += ` AND date >= ?`;
+        params.push(from);
+    }
+    if (to) {
+        query += ` AND DATE <= ?`;
+        params.push(to);
+    }
+
     let db;
     try {
+        //Return query
         db = await openDB();
-        const sessions = await db.all(`SELECT * FROM sessions WHERE user_id=?`, [req.user.userId]);
+        const sessions = await db.all(query, params);
         return res.json({ sessions });
     } catch (err) {
         console.error("Error fetching sessions", err);

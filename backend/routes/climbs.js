@@ -45,10 +45,29 @@ router.post("/", authenticateToken, async (req, res) => {
 
 //GET route, returns all climbs belonging to user if authenticated
 router.get("/", authenticateToken, async (req, res) => {
+    //Build query using query params
+    let query = `SELECT * FROM climbs WHERE user_id=?`;
+    let params = [req.user.userId];
+    const { grade, name, sort, order } = req.query;
+    if (grade) {
+        query += ` AND grade=?`;
+        params.push(grade.toLowerCase());
+    }
+    if (name) {
+        query += ` AND name LIKE ?`;
+        params.push(`%${name}%`);
+    }
+    if (sort) {
+        const sortOrder = order && order.toLowerCase() == "desc" ? "DESC" : "ASC";
+        const sortBy = ["name", "grade"].includes(sort.toLowerCase()) ? sort.toLowerCase() : "id";
+        query += `ORDER BY ${sortBy} ${sortOrder}`;
+    }
     let db;
     try {
+        //Return query
         db = await openDB();
-        const climbs = await db.all(`SELECT * FROM climbs WHERE user_id=?`, [req.user.userId]);
+        const climbs = await db.all(query, params);
+
         return res.json({ climbs });
     } catch (err) {
         console.error("Error fetching climbs", err);

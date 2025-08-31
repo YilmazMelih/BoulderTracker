@@ -43,7 +43,7 @@ router.post("/signup", async (req, res) => {
         const token = jwt.sign(
             { userId: result.lastID, username: username },
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "4h" }
         );
         res.status(201).json({
             message: "User created successfully!",
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign(
             { userId: user.id, username: user.username },
             process.env.JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "4h" }
         );
         res.json({ message: "Login successful", token });
     } catch (err) {

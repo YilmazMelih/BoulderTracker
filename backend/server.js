@@ -9,7 +9,7 @@ import sessionsRouter from "./routes/sessions.js";
 
 //Database debug
 
-// setupDB().catch((err) => console.error(err));
+setupDB().catch((err) => console.error(err));
 
 const PORT = 3001;
 
