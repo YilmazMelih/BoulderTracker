@@ -2,10 +2,12 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 export async function openDB() {
-    return open({
+    const db = await open({
         filename: "./db.sqlite",
         driver: sqlite3.Database,
     });
+    await db.exec("PRAGMA foreign_keys = ON;");
+    return db;
 }
 
 export async function setupDB() {
@@ -29,7 +31,7 @@ export async function setupDB() {
         grade TEXT NOT NULL,
         photo_url TEXT,
         color TEXT DEFAULT '#ffffff',
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
         `);
     await db.exec(`
@@ -37,7 +39,7 @@ export async function setupDB() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         date DATE NOT NULL,
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         )
         `);
     await db.exec(`
@@ -48,10 +50,11 @@ export async function setupDB() {
         attempts INTEGER NOT NULL,
         flashed BOOLEAN,
         topped BOOLEAN,
-        FOREIGN KEY (session_id) REFERENCES sessions(id),
-        FOREIGN KEY (climb_id) REFERENCES climbs(id)
+        FOREIGN KEY (session_id) REFERENCES sessions(id) ON DELETE CASCADE,
+        FOREIGN KEY (climb_id) REFERENCES climbs(id) ON DELETE CASCADE
         )
         `);
     console.log("Tables created");
+
     await db.close();
 }

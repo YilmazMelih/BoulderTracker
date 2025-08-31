@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { openDB } from "../db.js";
+import { authenticateToken } from "../middleware/authMiddleware.js";
 
 //Auth router
 const router = express.Router();
@@ -44,7 +45,11 @@ router.post("/signup", async (req, res) => {
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
-        res.status(201).json({ message: "User created successfully!", userId: result.lastID });
+        res.status(201).json({
+            message: "User created successfully!",
+            userId: result.lastID,
+            token: token,
+        });
     } catch (err) {
         console.error("Error signing up", err);
         return res.status(500).json({ message: "Something went wrong" });
@@ -88,6 +93,30 @@ router.post("/login", async (req, res) => {
         res.json({ message: "Login successful", token });
     } catch (err) {
         console.error("Error logging in", err);
+        return res.status(500).json({ message: "Something went wrong" });
+    } finally {
+        if (db) {
+            await db.close();
+        }
+    }
+});
+
+//DELETE route, deletes the corresponding user
+router.delete("/delete/:userId", authenticateToken, async (req, res) => {
+    const { userId } = req.params;
+    let db;
+    try {
+        db = await openDB();
+        //Verify user
+        if (req.user.userId != userId) {
+            return res.status(403).json({ message: "Cannot delete other users" });
+        }
+
+        //Delete user from DB
+        await db.run(`DELETE FROM users WHERE id=?`, userId);
+        res.json({ message: "User deleted successfully", userId: userId });
+    } catch (err) {
+        console.error("Error deleting user", err);
         return res.status(500).json({ message: "Something went wrong" });
     } finally {
         if (db) {

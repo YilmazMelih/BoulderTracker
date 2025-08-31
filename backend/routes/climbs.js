@@ -60,4 +60,32 @@ router.get("/", authenticateToken, async (req, res) => {
     }
 });
 
+//DELETE route, deletes the corresponding climb
+router.delete("/:climbId", authenticateToken, async (req, res) => {
+    const { climbId } = req.params;
+    let db;
+    try {
+        db = await openDB();
+        //Verify climb belongs to user
+        const climb = await db.get(`SELECT * FROM climbs WHERE id=? AND user_id=?`, [
+            climbId,
+            req.user.userId,
+        ]);
+        if (!climb) {
+            return res.status(403).json({ message: "No such climb exists for the user" });
+        }
+
+        //Delete climb from DB
+        await db.run(`DELETE FROM climbs WHERE id=?`, climbId);
+        res.json({ message: "Climb deleted successfully", climbId: climbId });
+    } catch (err) {
+        console.error("Error deleting climb", err);
+        return res.status(500).json({ message: "Something went wrong" });
+    } finally {
+        if (db) {
+            await db.close();
+        }
+    }
+});
+
 export default router;

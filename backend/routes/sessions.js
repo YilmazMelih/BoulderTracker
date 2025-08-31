@@ -59,6 +59,34 @@ router.get("/", authenticateToken, async (req, res) => {
     }
 });
 
+//DELETE route, deletes the corresponding climb
+router.delete("/:sessionId", authenticateToken, async (req, res) => {
+    const { sessionId } = req.params;
+    let db;
+    try {
+        db = await openDB();
+        //Verify session belongs to user
+        const session = await db.get(`SELECT * FROM sessions WHERE id=? AND user_id=?`, [
+            sessionId,
+            req.user.userId,
+        ]);
+        if (!session) {
+            return res.status(403).json({ message: "No such session exists for the user" });
+        }
+
+        //Delete session from DB
+        await db.run(`DELETE FROM sessions WHERE id=?`, sessionId);
+        res.json({ message: "Session deleted successfully", sessionId: sessionId });
+    } catch (err) {
+        console.error("Error deleting session", err);
+        return res.status(500).json({ message: "Something went wrong" });
+    } finally {
+        if (db) {
+            await db.close();
+        }
+    }
+});
+
 //Use climbLogsRouter for log routes
 router.use("/:sessionId/logs", climbLogsRouter);
 
