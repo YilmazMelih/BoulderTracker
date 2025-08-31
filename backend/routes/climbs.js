@@ -3,15 +3,20 @@ import express from "express";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { openDB } from "../db.js";
 
+//Climbs router
 const router = express.Router();
 
+//POST route, creates climb if authenticated
 router.post("/", authenticateToken, async (req, res) => {
+    //Extract and confirm required fields
     const { name, grade, photo_url, color } = req.body;
     if (!name || !grade) {
         return res.status(400).json({ message: "Missing required fields" });
     }
+
     let db;
     try {
+        //Create new climb in DB, return it to user
         db = await openDB();
         const result = await db.run(
             `INSERT INTO climbs (user_id, name, grade, photo_url, color)
@@ -38,6 +43,7 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 });
 
+//GET route, returns all climbs belonging to user if authenticated
 router.get("/", authenticateToken, async (req, res) => {
     let db;
     try {

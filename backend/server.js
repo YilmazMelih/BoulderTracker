@@ -7,15 +7,9 @@ import authRouter from "./routes/auth.js";
 import climbsRouter from "./routes/climbs.js";
 import sessionsRouter from "./routes/sessions.js";
 
-openDB()
-    .then((db) => {
-        console.log("Database opened");
-    })
-    .catch((err) => {
-        console.error("Database connection error", err);
-    });
+//Database debug
 
-setupDB().catch((err) => console.error(err));
+// setupDB().catch((err) => console.error(err));
 
 const PORT = 3001;
 
@@ -25,10 +19,6 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/api/climbs", climbsRouter);
 app.use("/api/sessions", sessionsRouter);
-
-app.get("/", (req, res) => {
-    res.send("API IS RUNNING");
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on PORT: ${PORT}`);

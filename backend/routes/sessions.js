@@ -5,15 +5,20 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 
 import climbLogsRouter from "./climblogs.js";
 
+//Sessions route
 const router = express.Router();
 
+//POST route, creates new session if authenticated
 router.post("/", authenticateToken, async (req, res) => {
-    let db;
+    //Extracts and confirms field
     const { date } = req.body;
     if (!date) {
         return res.status(400).json({ message: "Missing date" });
     }
+
+    let db;
     try {
+        //Create new session in DB, return it to user
         db = await openDB();
         const result = await db.run(
             `INSERT INTO sessions (user_id, date)
@@ -37,6 +42,7 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 });
 
+//GET route, returns all sessions belonging to user if authenticated
 router.get("/", authenticateToken, async (req, res) => {
     let db;
     try {
@@ -53,6 +59,7 @@ router.get("/", authenticateToken, async (req, res) => {
     }
 });
 
+//Use climbLogsRouter for log routes
 router.use("/:sessionId/logs", climbLogsRouter);
 
 export default router;
