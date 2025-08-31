@@ -26,8 +26,9 @@ export async function setupDB() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         name TEXT NOT NULL,
-        difficulty TEXT NOT NULL,
+        grade TEXT NOT NULL,
         photo_url TEXT,
+        color TEXT DEFAULT '#ffffff',
         FOREIGN KEY (user_id) REFERENCES users(id)
         )
         `);
@@ -46,6 +47,7 @@ export async function setupDB() {
         climb_id INTEGER NOT NULL,
         attempts INTEGER NOT NULL,
         flashed BOOLEAN,
+        topped BOOLEAN,
         FOREIGN KEY (session_id) REFERENCES sessions(id),
         FOREIGN KEY (climb_id) REFERENCES climbs(id)
         )

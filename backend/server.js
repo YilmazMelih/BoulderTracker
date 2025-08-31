@@ -5,6 +5,7 @@ import "dotenv/config";
 import { openDB, setupDB } from "./db.js";
 import authRouter from "./routes/auth.js";
 import climbsRouter from "./routes/climbs.js";
+import sessionsRouter from "./routes/sessions.js";
 
 openDB()
     .then((db) => {
@@ -23,6 +24,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/api/climbs", climbsRouter);
+app.use("/api/sessions", sessionsRouter);
 
 app.get("/", (req, res) => {
     res.send("API IS RUNNING");

@@ -6,29 +6,27 @@ import { openDB } from "../db.js";
 const router = express.Router();
 
 router.post("/", authenticateToken, async (req, res) => {
-    const { name, difficulty, photo_url } = req.body;
-    if (!name || !difficulty) {
+    const { name, grade, photo_url, color } = req.body;
+    if (!name || !grade) {
         return res.status(400).json({ message: "Missing required fields" });
     }
     let db;
     try {
         db = await openDB();
         const result = await db.run(
-            `INSERT INTO climbs (user_id, name, difficulty, photo_url)
-            VALUES (?,?,?,?)`,
+            `INSERT INTO climbs (user_id, name, grade, photo_url, color)
+            VALUES (?,?,?,?, ?)`,
             req.user.userId,
             name,
-            difficulty,
-            photo_url || null
+            grade,
+            photo_url || null,
+            color || "#ffffff"
         );
+        const newClimb = await db.get(`SELECT * FROM climbs WHERE id=?`, result.lastID);
 
         res.status(201).json({
             message: "Climb created successfully",
-            id: result.lastID,
-            user_id: req.user.userId,
-            name: name,
-            difficulty: difficulty,
-            photo_url: photo_url || null,
+            climb: newClimb,
         });
     } catch (err) {
         console.error("Error creating climb", err);
