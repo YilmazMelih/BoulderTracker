@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import { openDB } from "../db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 
@@ -92,22 +92,15 @@ router.get("/", authenticateToken, async (req, res) => {
 
 //PUT route, replaces corresponding log with provided values
 router.put("/:logId", authenticateToken, async (req, res) => {
-    //Extract and confirm fields
+    //Extract fields
     const { sessionId, logId } = req.params;
     const { attempts, topped, flashed } = req.body;
-    if (!attempts) {
-        return res.status(400).json({ message: "Missing required fields" });
-    }
-    //Enforce topped = true if flashed = true
-    if ((flashed && !topped) || (flashed && !JSON.parse(topped))) {
-        return res.status(400).json({ message: "Topped must be true if flashed" });
-    }
 
     let db;
     try {
         //Verify log and session belongs to user
         db = await openDB();
-        const log = await db.get(`SELECT * FROM climb_logs WHERE id=? AND session_id=?`, [
+        const oldLog = await db.get(`SELECT * FROM climb_logs WHERE id=? AND session_id=?`, [
             logId,
             sessionId,
         ]);
@@ -115,15 +108,26 @@ router.put("/:logId", authenticateToken, async (req, res) => {
             req.user.userId,
             sessionId,
         ]);
-        if (!log || !session) {
+        if (!oldLog || !session) {
             return res.status(403).json({ message: "No such log/session exists for the user" });
+        }
+
+        //Enforce topped = true if flashed = true
+        if (
+            flashed &&
+            JSON.parse(flashed) &&
+            ((topped && !JSON.parse(topped)) || (!topped && !JSON.parse(oldLog.topped)))
+        ) {
+            return res.status(400).json({ message: "Topped must be true if flashed" });
+        } else if (JSON.parse(oldLog.flashed) && topped && !JSON.parse(topped)) {
+            return res.status(400).json({ message: "Topped must be true if flashed" });
         }
 
         //Update log with new fields, return updated log
         await db.run(`UPDATE climb_logs SET attempts=?, flashed=?, topped=? WHERE id=?`, [
-            attempts,
-            flashed || 0,
-            topped || 0,
+            attempts || oldLog.attempts,
+            flashed || oldLog.flashed,
+            topped || oldLog.topped,
             logId,
         ]);
         const newLog = await db.get(`SELECT * FROM climb_logs WHERE id=?`, logId);

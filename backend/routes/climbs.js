@@ -60,6 +60,44 @@ router.get("/", authenticateToken, async (req, res) => {
     }
 });
 
+//PUT route, replaces corresponding climb with provided values
+router.put("/:climbId", authenticateToken, async (req, res) => {
+    //Extract fields
+    const { climbId } = req.params;
+    const { name, grade, color, photo_url } = req.body;
+
+    let db;
+    try {
+        //Verify climb belongs to user
+        db = await openDB();
+        const oldClimb = await db.get(`SELECT * FROM climbs WHERE id=? AND user_id=?`, [
+            climbId,
+            req.user.userId,
+        ]);
+        if (!oldClimb) {
+            return res.status(403).json({ message: "No such climb exists for the user" });
+        }
+
+        //Update climb with new fields, return updated log
+        await db.run(`UPDATE climbs SET name=?, grade=?, color=?, photo_url=? WHERE id=?`, [
+            name || oldClimb.name,
+            grade || oldClimb.grade,
+            color || oldClimb.color,
+            photo_url || oldClimb.photo_url,
+            climbId,
+        ]);
+        const newClimb = await db.get(`SELECT * FROM climbs WHERE id=?`, climbId);
+        res.json({ message: "Climb updated successfully", climb: newClimb });
+    } catch (err) {
+        console.error("Error updating log", err);
+        return res.status(500).json({ message: "Something went wrong" });
+    } finally {
+        if (db) {
+            await db.close();
+        }
+    }
+});
+
 //DELETE route, deletes the corresponding climb
 router.delete("/:climbId", authenticateToken, async (req, res) => {
     const { climbId } = req.params;
