@@ -3,7 +3,8 @@ import cors from "cors";
 import "dotenv/config";
 
 import { openDB, setupDB } from "./db.js";
-import authRoutes from "./routes/auth.js";
+import authRouter from "./routes/auth.js";
+import climbsRouter from "./routes/climbs.js";
 
 openDB()
     .then((db) => {
@@ -20,7 +21,8 @@ const PORT = 3001;
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/auth", authRoutes);
+app.use("/auth", authRouter);
+app.use("/api/climbs", climbsRouter);
 
 app.get("/", (req, res) => {
     res.send("API IS RUNNING");

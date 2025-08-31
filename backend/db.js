@@ -16,7 +16,7 @@ export async function setupDB() {
         username TEXT UNIQUE NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password_hash TEXT NOT NULL,
-        created_at TIMESTAMP DEFAULT_CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         pfp_url TEXT
         )
         `);
@@ -27,10 +27,27 @@ export async function setupDB() {
         user_id INTEGER NOT NULL,
         name TEXT NOT NULL,
         difficulty TEXT NOT NULL,
-        date DATE NOT NULL,
-        notes TEXT,
         photo_url TEXT,
         FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+        `);
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS sessions(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        date DATE NOT NULL,
+        FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+        `);
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS climb_logs(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id INTEGER NOT NULL,
+        climb_id INTEGER NOT NULL,
+        attempts INTEGER NOT NULL,
+        flashed BOOLEAN,
+        FOREIGN KEY (session_id) REFERENCES sessions(id),
+        FOREIGN KEY (climb_id) REFERENCES climbs(id)
         )
         `);
     console.log("Tables created");
