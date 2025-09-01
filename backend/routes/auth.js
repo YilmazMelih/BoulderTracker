@@ -1,20 +1,33 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Joi from "joi";
 import { openDB } from "../db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
+
+//Schemas for input validation
+const signupSchema = Joi.object({
+    username: Joi.string().min(4).max(20).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+});
+
+const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().required(),
+});
 
 //Auth router
 const router = express.Router();
 
 //Signup route, creates new user in DB and provides JWT token
 router.post("/signup", async (req, res) => {
-    //Extract and confirm fields
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
-        res.status(400).json({ message: "Error, missing required fields" });
-        return;
+    //Extract and validate inputs
+    const { error, value } = signupSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
+    const { username, email, password } = value;
 
     let db;
     try {
@@ -62,11 +75,12 @@ router.post("/signup", async (req, res) => {
 
 //Login route, logs existing user in and provides JWT token
 router.post("/login", async (req, res) => {
-    //Extract and confirm fields
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: "Missing fields" });
+    //Extract and validate inputs
+    const { error, value } = loginSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
+    const { email, password } = value;
 
     let db;
     try {

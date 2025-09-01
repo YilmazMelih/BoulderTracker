@@ -1,18 +1,34 @@
 import express from "express";
-
+import Joi from "joi";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 import { openDB } from "../db.js";
+
+//Schemas for input validation
+const climbSchema = Joi.object({
+    name: Joi.string().min(1).max(100).required(),
+    grade: Joi.string().min(1).max(10).required(),
+    photo_url: Joi.string().uri().optional(),
+    color: Joi.string().min(3).max(10).optional(),
+});
+
+const climbSchemaEdit = Joi.object({
+    name: Joi.string().min(1).max(100).optional(),
+    grade: Joi.string().min(1).max(10).optional(),
+    photo_url: Joi.string().uri().optional(),
+    color: Joi.string().min(3).max(10).optional(),
+});
 
 //Climbs router
 const router = express.Router();
 
 //POST route, creates climb if authenticated
 router.post("/", authenticateToken, async (req, res) => {
-    //Extract and confirm required fields
-    const { name, grade, photo_url, color } = req.body;
-    if (!name || !grade) {
-        return res.status(400).json({ message: "Missing required fields" });
+    //Extract and validate inputs
+    const { error, value } = climbSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
+    const { name, grade, photo_url, color } = value;
 
     let db;
     try {
@@ -62,6 +78,7 @@ router.get("/", authenticateToken, async (req, res) => {
         const sortBy = ["name", "grade"].includes(sort.toLowerCase()) ? sort.toLowerCase() : "id";
         query += `ORDER BY ${sortBy} ${sortOrder}`;
     }
+
     let db;
     try {
         //Return query
@@ -81,9 +98,12 @@ router.get("/", authenticateToken, async (req, res) => {
 
 //PUT route, replaces corresponding climb with provided values
 router.put("/:climbId", authenticateToken, async (req, res) => {
-    //Extract fields
-    const { climbId } = req.params;
-    const { name, grade, color, photo_url } = req.body;
+    //Build query using query params
+    const { error, value } = climbSchemaEdit.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+    const { name, grade, photo_url, color } = value;
 
     let db;
     try {

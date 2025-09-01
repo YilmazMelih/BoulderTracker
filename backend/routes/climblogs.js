@@ -1,18 +1,35 @@
 import express, { json } from "express";
+import Joi from "joi";
 import { openDB } from "../db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
+
+//Schemas for input validation
+const logSchema = Joi.object({
+    climb_id: Joi.number().integer().required(),
+    attempts: Joi.number().integer().min(1).required(),
+    flashed: Joi.boolean().optional(),
+    topped: Joi.boolean().optional(),
+});
+
+const logSchemaEdit = Joi.object({
+    attempts: Joi.number().integer().min(1).optional(),
+    flashed: Joi.boolean().optional(),
+    topped: Joi.boolean().optional(),
+});
 
 //Climb logs router
 const router = express.Router({ mergeParams: true });
 
 //POST route, creates log if authenticated
 router.post("/", authenticateToken, async (req, res) => {
-    //Extract and confirm fields
-    const { sessionId } = req.params;
-    const { climb_id, attempts, flashed, topped } = req.body;
-    if (!sessionId || !climb_id || !attempts) {
-        return res.status(400).json({ message: "Missing required fields" });
+    //Extracts and validates field
+    const { error, value } = logSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
+    const { sessionId } = req.params;
+    const { climb_id, attempts, flashed, topped } = value;
+
     //Enforce topped = true if flashed = true
     if ((flashed && !topped) || (flashed && !JSON.parse(topped))) {
         return res.status(400).json({ message: "Topped must be true if flashed" });
@@ -85,7 +102,6 @@ router.get("/", authenticateToken, async (req, res) => {
         query += ` AND grade>=?`;
         params.push(grade_from.toLowerCase());
     }
-
     if (sort) {
         const sortOrder = order && order.toLowerCase() == "desc" ? "DESC" : "ASC";
         const sortBy = ["name", "grade"].includes(sort.toLowerCase()) ? sort.toLowerCase() : "id";
@@ -119,9 +135,13 @@ router.get("/", authenticateToken, async (req, res) => {
 
 //PUT route, replaces corresponding log with provided values
 router.put("/:logId", authenticateToken, async (req, res) => {
-    //Extract fields
+    //Extracts and validates field
+    const { error, value } = logSchemaEdit.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
     const { sessionId, logId } = req.params;
-    const { attempts, topped, flashed } = req.body;
+    const { attempts, topped, flashed } = value;
 
     let db;
     try {
@@ -142,11 +162,11 @@ router.put("/:logId", authenticateToken, async (req, res) => {
         //Enforce topped = true if flashed = true
         if (
             flashed &&
-            JSON.parse(flashed) &&
-            ((topped && !JSON.parse(topped)) || (!topped && !JSON.parse(oldLog.topped)))
+            ((topped != undefined && !topped) ||
+                (topped == undefined && !JSON.parse(oldLog.topped)))
         ) {
             return res.status(400).json({ message: "Topped must be true if flashed" });
-        } else if (JSON.parse(oldLog.flashed) && topped && !JSON.parse(topped)) {
+        } else if (JSON.parse(oldLog.flashed) && topped != undefined && !topped) {
             return res.status(400).json({ message: "Topped must be true if flashed" });
         }
 

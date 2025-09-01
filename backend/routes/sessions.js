@@ -1,20 +1,26 @@
 import express from "express";
-
+import Joi from "joi";
 import { openDB } from "../db.js";
 import { authenticateToken } from "../middleware/authMiddleware.js";
 
 import climbLogsRouter from "./climblogs.js";
+
+//Schemas for input validation
+const sessionSchema = Joi.object({
+    date: Joi.date().required(),
+});
 
 //Sessions route
 const router = express.Router();
 
 //POST route, creates new session if authenticated
 router.post("/", authenticateToken, async (req, res) => {
-    //Extracts and confirms field
-    const { date } = req.body;
-    if (!date) {
-        return res.status(400).json({ message: "Missing date" });
+    //Extracts and validates field
+    const { error, value } = sessionSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
     }
+    const date = new Date(value.date);
 
     let db;
     try {
@@ -24,7 +30,7 @@ router.post("/", authenticateToken, async (req, res) => {
             `INSERT INTO sessions (user_id, date)
             VALUES (?,?)`,
             req.user.userId,
-            date
+            date.toISOString()
         );
         const newSession = await db.get(`SELECT * FROM sessions WHERE id=?`, result.lastID);
 
