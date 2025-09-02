@@ -73,6 +73,81 @@ export async function apiCreateSession() {
     }
 }
 
+export async function apiFetchClimbs() {
+    const token = localStorage.getItem("token");
+    try {
+        const res = await api.get("/climbs", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiCreateClimb(name, grade, color, photo_url) {
+    const token = localStorage.getItem("token");
+    try {
+        const res = await api.post(
+            "/climbs",
+            {
+                name: name,
+                grade: grade,
+                color: color ? color : null,
+                photo_url: photo_url ? photo_url : null,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiFetchSessionDet(id) {
+    const token = localStorage.getItem("token");
+    try {
+        const res = await api.get(`/sessions/${id}/logs`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiCreateLog(id, climb_id, attempts, flashed, topped) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.post(
+            `/sessions/${id}`,
+            {
+                climb_id: climb_id,
+                attempts: attempts,
+                flashed: flashed ? flashed : false,
+                topped: topped ? topped : false,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
 export function checkTokenExpired() {
     const token = localStorage.getItem("token");
     if (!token) {
