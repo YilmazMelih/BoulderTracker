@@ -19,6 +19,9 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/api/climbs", climbsRouter);
 app.use("/api/sessions", sessionsRouter);
+app.get("/", (req, res) => {
+    res.send(`{ message: API IS RUNNING }`);
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on PORT: ${PORT}`);

@@ -1,3 +1,43 @@
+import AddSessionCard from "../components/cards/AddSessionCard.jsx";
+import SessionCard from "../components/cards/SessionCard.jsx";
+import { SimpleGrid } from "@chakra-ui/react";
+import { apiFetchSessions, apiCreateSession } from "../api/api.js";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function SessionsPage() {
-    return <h1>Sessions Page</h1>;
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+    const [sessions, setSessions] = useState([]);
+
+    useEffect(() => {
+        const fetch = async () => {
+            const data = await apiFetchSessions();
+            if (!data.error) {
+                setSessions(data.sessions);
+            }
+        };
+        fetch();
+    }, [token]);
+
+    async function handleCreate() {
+        const res = await apiCreateSession();
+        if (!res.error) {
+            console.log(res);
+            navigate(`/sessions/${res.session.id}`);
+        }
+    }
+
+    return (
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+            <AddSessionCard onClick={handleCreate} />
+            {sessions.map((session) => (
+                <SessionCard
+                    key={session.id}
+                    session={session}
+                    onClick={() => navigate(`/sessions/${session.id}`)}
+                />
+            ))}
+        </SimpleGrid>
+    );
 }

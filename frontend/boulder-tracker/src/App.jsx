@@ -6,12 +6,11 @@ import SessionsPage from "./pages/SessionsPage.jsx";
 import ClimbsPage from "./pages/ClimbsPage.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import SessionDetailsPage from "./pages/SessionDetailsPage.jsx";
+import { checkTokenExpired } from "./api/api.js";
 
 function App() {
     const ProtectedRoute = ({ children }) => {
-        const token = localStorage.getItem("token");
-        // return token ? children : <Navigate to="/login" />;
-        return children;
+        return checkTokenExpired() ? <Navigate to="/login" /> : children;
     };
 
     return (
@@ -59,6 +58,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                <Route path="*" element={<Navigate to="/dashboard" />} />
             </Routes>
         </Router>
     );
