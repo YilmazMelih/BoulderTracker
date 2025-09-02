@@ -104,7 +104,7 @@ router.put("/:climbId", authenticateToken, async (req, res) => {
         return res.status(400).json({ message: error.details[0].message });
     }
     const { name, grade, photo_url, color } = value;
-
+    const { climbId } = req.params;
     let db;
     try {
         //Verify climb belongs to user
