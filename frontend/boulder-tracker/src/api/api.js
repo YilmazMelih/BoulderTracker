@@ -95,8 +95,31 @@ export async function apiCreateClimb(name, grade, color, photo_url) {
             {
                 name: name,
                 grade: grade,
-                color: color ? color : null,
-                photo_url: photo_url ? photo_url : null,
+                ...(color && { color }),
+                ...(photo_url && { photo_url }),
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiEditClimb(name, grade, color, photo_url, climb_id) {
+    const token = localStorage.getItem("token");
+    try {
+        const res = await api.put(
+            `/climbs/${climb_id}`,
+            {
+                name: name,
+                grade: grade,
+                ...(color && { color }),
+                ...(photo_url && { photo_url }),
             },
             {
                 headers: {
