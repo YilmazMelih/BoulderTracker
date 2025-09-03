@@ -1,6 +1,7 @@
 import { Box, Input, Button } from "@chakra-ui/react";
 import { authSignup, authLogout, checkTokenExpired } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
     const navigate = useNavigate();
@@ -14,6 +15,9 @@ export default function SignupPage() {
         const email = formData.get("email");
         const password = formData.get("password");
         const res = await authSignup(username, email, password);
+        if (res.error) {
+            toast.error(res.error);
+        }
         if (res.token) {
             localStorage.setItem("token", res.token);
             navigate("/dashboard");

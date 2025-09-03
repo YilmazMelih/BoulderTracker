@@ -4,6 +4,7 @@ import { SimpleGrid } from "@chakra-ui/react";
 import { apiFetchSessionDet, apiCreateLog } from "../api/api.js";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
 export default function SessionDetailsPage() {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function SessionDetailsPage() {
             const data = await apiFetchSessionDet(id);
             if (!data.error) {
                 setLogs(data.logs);
+            } else {
+                toast.error(data.error);
             }
         };
         fetch();

@@ -5,7 +5,7 @@ import { SimpleGrid } from "@chakra-ui/react";
 import { apiFetchClimbs, apiCreateClimb, apiEditClimb } from "../api/api.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { VscLayoutPanelJustify } from "react-icons/vsc";
+import toast from "react-hot-toast";
 
 export default function ClimbsPage() {
     const navigate = useNavigate();
@@ -19,6 +19,8 @@ export default function ClimbsPage() {
             const data = await apiFetchClimbs();
             if (!data.error) {
                 setClimbs(data.climbs);
+            } else {
+                toast.error(data.error);
             }
         };
         fetch();
@@ -33,13 +35,19 @@ export default function ClimbsPage() {
                 const data = await apiFetchClimbs();
                 if (!data.error) {
                     setClimbs(data.climbs);
+                } else {
+                    toast.error(data.error);
                 }
+            } else {
+                toast.error(res.error);
             }
         } else {
             const res = await apiCreateClimb(name, grade, color, photo_url);
             if (!res.error) {
                 setClimbs((prev) => [...prev, res.climb]);
                 setModalState(false);
+            } else {
+                toast.error(res.error);
             }
         }
     }
