@@ -224,6 +224,21 @@ export async function apiDeleteSession(session_id) {
     }
 }
 
+export async function apiDeleteSesh(id) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.delete(`/sessions/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
 export async function apiDeleteLog(id, log_id) {
     const token = localStorage.getItem("token");
 

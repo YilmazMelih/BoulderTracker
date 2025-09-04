@@ -2,12 +2,13 @@ import AddLogCard from "../components/cards/AddLogCard.jsx";
 import ClimbLogCard from "../components/cards/ClimbLogCard.jsx";
 import AddLogModal from "../components/modals/AddLogModal.jsx";
 import SelectClimbModal from "../components/modals/SelectClimbModal.jsx";
-import { SimpleGrid } from "@chakra-ui/react";
+import { SimpleGrid, Button, Box } from "@chakra-ui/react";
 import {
     apiFetchSessionDet,
     apiCreateLog,
     apiEditLog,
     apiDeleteLog,
+    apiDeleteSesh,
     checkTokenExpired,
 } from "../api/api.js";
 import { useState, useEffect } from "react";
@@ -23,6 +24,8 @@ export default function SessionDetailsPage() {
     const [selectLogModalOpen, setSelectLogModalOpen] = useState(false);
     const [selectedClimb, setSelectedClimb] = useState(null);
     const [selectedLog, setSelectedLog] = useState(null);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     if (checkTokenExpired()) {
         navigate("/login");
@@ -87,8 +90,22 @@ export default function SessionDetailsPage() {
         setSelectedLog(null);
     }
 
+    async function handleSeshDelete() {
+        if (deleteConfirm) {
+            await apiDeleteSesh(id);
+            navigate("/sessions");
+        } else {
+            setDisabled(true);
+            toast("Are you you want to delete this session?");
+            setTimeout(() => {
+                setDisabled(false);
+                setDeleteConfirm(true);
+            }, 3000);
+        }
+    }
+
     return (
-        <>
+        <Box position="relative" h="100vh" border="1px solid red">
             <SimpleGrid
                 justifyItems="center"
                 maxWidth="1200px"
@@ -114,7 +131,41 @@ export default function SessionDetailsPage() {
                     />
                 ))}
             </SimpleGrid>
-
+            <Button
+                position="absolute"
+                bottom="32px"
+                right="32px"
+                bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                fontWeight="bold"
+                fontSize="md"
+                boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                w="100px"
+                h="40px"
+                _hover={{ transform: "scale(1.05)" }}
+                transition="transform 0.2s"
+                disabled={disabled}
+                onClick={handleSeshDelete}
+            >
+                Delete
+            </Button>
+            <Button
+                position="absolute"
+                bottom="32px"
+                left="32px"
+                bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                fontWeight="bold"
+                fontSize="md"
+                boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                w="100px"
+                h="40px"
+                _hover={{ transform: "scale(1.05)" }}
+                transition="transform 0.2s"
+                onClick={() => {
+                    navigate("/sessions");
+                }}
+            >
+                Back
+            </Button>
             <SelectClimbModal
                 isOpen={selectClimbOpen}
                 onClose={() => setSelectClimbOpen(false)}
@@ -133,6 +184,6 @@ export default function SessionDetailsPage() {
                 onDelete={handleDelete}
                 existingLog={selectedLog}
             />
-        </>
+        </Box>
     );
 }
