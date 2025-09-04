@@ -152,7 +152,7 @@ export async function apiCreateLog(id, climb_id, attempts, flashed, topped) {
 
     try {
         const res = await api.post(
-            `/sessions/${id}`,
+            `/sessions/${id}/logs`,
             {
                 climb_id: climb_id,
                 attempts: attempts,
@@ -165,6 +165,74 @@ export async function apiCreateLog(id, climb_id, attempts, flashed, topped) {
                 },
             }
         );
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiEditLog(id, log_id, attempts, flashed, topped) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.put(
+            `/sessions/${id}/logs/${log_id}`,
+            {
+                attempts: attempts,
+                flashed: flashed ? flashed : false,
+                topped: topped ? topped : false,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiDeleteClimb(climb_id) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.delete(`/climbs/${climb_id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiDeleteSession(session_id) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.delete(`/sessions/${session_id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
+export async function apiDeleteLog(id, log_id) {
+    const token = localStorage.getItem("token");
+
+    try {
+        const res = await api.delete(`/sessions/${id}/logs/${log_id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return res.data;
     } catch (err) {
         return handleError(err);
@@ -184,7 +252,7 @@ export function checkTokenExpired() {
 
 function handleError(err) {
     if (err.response) {
-        if (err.response.status == `Invalid or expired token`) {
+        if (err.response.data.message == `Invalid or expired token`) {
             console.log("EXPIRED CAUGHT");
         }
         console.error(`Status:`, err.response.status);

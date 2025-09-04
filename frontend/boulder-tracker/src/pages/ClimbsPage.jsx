@@ -2,7 +2,13 @@ import AddClimbCard from "../components/cards/AddClimbCard.jsx";
 import ClimbCard from "../components/cards/ClimbCard.jsx";
 import ClimbModal from "../components/modals/ClimbModal.jsx";
 import { SimpleGrid } from "@chakra-ui/react";
-import { apiFetchClimbs, apiCreateClimb, apiEditClimb } from "../api/api.js";
+import {
+    apiFetchClimbs,
+    apiCreateClimb,
+    apiEditClimb,
+    apiDeleteClimb,
+    checkTokenExpired,
+} from "../api/api.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -14,19 +20,24 @@ export default function ClimbsPage() {
     const [modalState, setModalState] = useState(false);
     const [modalClimb, setModalClimb] = useState(null);
 
+    if (checkTokenExpired()) {
+        navigate("/login");
+    }
+
+    const fetch = async () => {
+        const data = await apiFetchClimbs();
+        if (!data.error) {
+            setClimbs(data.climbs);
+        } else {
+            toast.error(data.error);
+        }
+    };
+
     useEffect(() => {
-        const fetch = async () => {
-            const data = await apiFetchClimbs();
-            if (!data.error) {
-                setClimbs(data.climbs);
-            } else {
-                toast.error(data.error);
-            }
-        };
         fetch();
     }, [token]);
 
-    async function handleCreateClimb(values) {
+    async function handleSubmit(values) {
         const { name, grade, color, photo_url, climb_id } = values;
         if (climb_id) {
             const res = await apiEditClimb(name, grade, color, photo_url, climb_id);
@@ -50,6 +61,18 @@ export default function ClimbsPage() {
                 toast.error(res.error);
             }
         }
+        setModalClimb(null);
+    }
+
+    async function handleDelete(climb_id) {
+        const res = await apiDeleteClimb(climb_id);
+        if (!res.error) {
+            fetch();
+            setModalState(false);
+        } else {
+            toast.error(res.error);
+        }
+        setModalClimb(null);
     }
 
     return (
@@ -75,7 +98,8 @@ export default function ClimbsPage() {
                 onClose={() => {
                     setModalState(false), setModalClimb(null);
                 }}
-                onSubmit={handleCreateClimb}
+                onSubmit={handleSubmit}
+                onDelete={handleDelete}
                 climb={modalClimb}
             />
         </>

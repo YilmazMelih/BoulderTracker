@@ -11,15 +11,20 @@ import {
     ColorPickerChannelSlider,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
-export default function ClimbModal({ isOpen, onClose, onSubmit, climb }) {
+export default function ClimbModal({ isOpen, onClose, onSubmit, climb, onDelete }) {
     const [name, setName] = useState("");
     const [grade, setGrade] = useState("");
     const [color, setColor] = useState("#ffffff");
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [disabled, setDisabled] = useState(false);
 
     const climb_id = climb ? climb.id : null;
     const gradeOptions = Array.from({ length: 10 }, (_, i) => `V${i}`);
     useEffect(() => {
+        setDeleteConfirm(false);
+        setDisabled(false);
         if (climb) {
             setName(climb.name || "");
             setGrade(climb.grade || "");
@@ -33,6 +38,21 @@ export default function ClimbModal({ isOpen, onClose, onSubmit, climb }) {
 
     function handleSubmit() {
         onSubmit({ name, grade, color, climb_id });
+    }
+
+    function handleDelete() {
+        if (deleteConfirm) {
+            climb ? onDelete(climb_id) : null;
+        } else {
+            setDisabled(true);
+            toast(
+                "Are you you want to delete this climb? \n (This will delete all logs associated)"
+            );
+            setTimeout(() => {
+                setDisabled(false);
+                setDeleteConfirm(true);
+            }, 3000);
+        }
     }
 
     return (
@@ -92,6 +112,11 @@ export default function ClimbModal({ isOpen, onClose, onSubmit, climb }) {
                         </Dialog.Body>
 
                         <Dialog.Footer>
+                            {climb ? (
+                                <Button onClick={handleDelete} disabled={disabled}>
+                                    Delete
+                                </Button>
+                            ) : null}
                             <Dialog.ActionTrigger asChild>
                                 <Button>Cancel</Button>
                             </Dialog.ActionTrigger>

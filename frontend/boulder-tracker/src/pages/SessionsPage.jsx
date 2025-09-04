@@ -1,7 +1,7 @@
 import AddSessionCard from "../components/cards/AddSessionCard.jsx";
 import SessionCard from "../components/cards/SessionCard.jsx";
 import { SimpleGrid } from "@chakra-ui/react";
-import { apiFetchSessions, apiCreateSession } from "../api/api.js";
+import { apiFetchSessions, apiCreateSession, checkTokenExpired } from "../api/api.js";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -10,6 +10,10 @@ export default function SessionsPage() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     const [sessions, setSessions] = useState([]);
+
+    if (checkTokenExpired()) {
+        navigate("/login");
+    }
 
     useEffect(() => {
         const fetch = async () => {
