@@ -50,8 +50,14 @@ export default function SelectClimbModal({ isOpen, onClose, onSelectClimb }) {
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content>
-                        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+                    <Dialog.Content bg="linear-gradient(180deg, #fff8e6 0%, #e1d9c5 100%)">
+                        <SimpleGrid
+                            justifyItems="center"
+                            maxWidth="1200px"
+                            margin="32px auto 0"
+                            gap="16px"
+                            columns={{ base: 1, md: 2, lg: 3 }}
+                        >
                             <AddClimbCard onClick={() => setModalState(true)} />
                             {climbs.map((climb) => (
                                 <ClimbCard

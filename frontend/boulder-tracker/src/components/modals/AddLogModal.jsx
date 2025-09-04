@@ -69,20 +69,31 @@ export default function AddLogModal({
         >
             <Portal>
                 <Dialog.Positioner>
-                    <Dialog.Content>
+                    <Dialog.Backdrop />
+
+                    <Dialog.Content boxShadow="0px 3px 5px 0px rgba(135,93,61,0.45)">
                         <Dialog.Header>
-                            <Dialog.Title>{existingLog ? "Edit Log" : "Add Log"}</Dialog.Title>
+                            <Dialog.Title fontSize="2xl">
+                                {existingLog ? "Edit Log" : "Add Log"}
+                            </Dialog.Title>
                         </Dialog.Header>
 
                         <Dialog.Body>
-                            <Field.Root>
-                                <Field.Label>Climb</Field.Label>
-                                <HStack>
+                            <Field.Root mb="8px">
+                                <Field.Label fontSize="lg" fontWeight="bold">
+                                    Climb
+                                </Field.Label>
+                                <HStack w="100%">
                                     <Input
                                         value={selectedClimb ? selectedClimb.name : ""}
                                         readOnly
+                                        w="100%"
                                         disabled
                                         cursor={"default"}
+                                        fontSize="md"
+                                        border="none"
+                                        bg="#ffffff"
+                                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
                                         placeholder="Select a climb"
                                     />
                                     <Button
@@ -90,21 +101,33 @@ export default function AddLogModal({
                                             onClose();
                                             onChangeClimb();
                                         }}
+                                        bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                        fontWeight="bold"
+                                        fontSize="md"
+                                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
                                     >
                                         Change
                                     </Button>
                                 </HStack>
                             </Field.Root>
 
-                            <Field.Root>
-                                <Field.Label>Attempts</Field.Label>
+                            <Field.Root mb="16px" w="100%">
+                                <Field.Label fontSize="lg" fontWeight="bold">
+                                    Attempts
+                                </Field.Label>
                                 <NumberInput.Root
+                                    w="100%"
                                     defaultValue={attempts}
                                     onValueChange={(val) => setAttempts(val.valueAsNumber)}
                                     min={0}
                                 >
-                                    <NumberInput.Control />
-                                    <NumberInput.Input />
+                                    <NumberInput.Control w="90px" />
+                                    <NumberInput.Input
+                                        w="100%"
+                                        border="none"
+                                        fontSize="md"
+                                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                    />
                                 </NumberInput.Root>
                             </Field.Root>
 
@@ -112,22 +135,40 @@ export default function AddLogModal({
                                 <CheckboxCard.Root
                                     defaultChecked={flashed}
                                     onChange={() => setFlashed(!flashed)}
+                                    _checked={{
+                                        border: "1px solid #482307",
+                                        boxShadow: "0px 0px 0px 1px #482307",
+                                    }}
+                                    cursor="pointer"
                                 >
                                     <CheckboxCard.HiddenInput />
                                     <CheckboxCard.Control>
-                                        <CheckboxCard.Label>Flashed</CheckboxCard.Label>
-                                        <CheckboxCard.Indicator />
+                                        <CheckboxCard.Label fontSize="lg" fontWeight="bold">
+                                            Flashed
+                                        </CheckboxCard.Label>
+                                        <CheckboxCard.Indicator
+                                            _checked={{ bg: "#482307", border: "#482307" }}
+                                        />
                                     </CheckboxCard.Control>
                                 </CheckboxCard.Root>
 
                                 <CheckboxCard.Root
                                     defaultChecked={topped}
                                     onChange={() => setTopped(!topped)}
+                                    _checked={{
+                                        border: "1px solid #482307",
+                                        boxShadow: "0px 0px 0px 1px #482307",
+                                    }}
+                                    cursor="pointer"
                                 >
                                     <CheckboxCard.HiddenInput />
                                     <CheckboxCard.Control>
-                                        <CheckboxCard.Label>Topped</CheckboxCard.Label>
-                                        <CheckboxCard.Indicator />
+                                        <CheckboxCard.Label fontSize="lg" fontWeight="bold">
+                                            Topped
+                                        </CheckboxCard.Label>
+                                        <CheckboxCard.Indicator
+                                            _checked={{ bg: "#482307", border: "#482307" }}
+                                        />
                                     </CheckboxCard.Control>
                                 </CheckboxCard.Root>
                             </HStack>
@@ -135,14 +176,36 @@ export default function AddLogModal({
 
                         <Dialog.Footer>
                             {existingLog ? (
-                                <Button onClick={handleDelete} disabled={disabled}>
+                                <Button
+                                    onClick={handleDelete}
+                                    disabled={disabled}
+                                    bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                    fontWeight="bold"
+                                    fontSize="md"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                >
                                     Delete
                                 </Button>
                             ) : null}
                             <Dialog.ActionTrigger asChild>
-                                <Button>Cancel</Button>
+                                <Button
+                                    bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                    fontWeight="bold"
+                                    fontSize="md"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                >
+                                    Cancel
+                                </Button>
                             </Dialog.ActionTrigger>
-                            <Button onClick={handleSubmit}>{existingLog ? "Save" : "Add"}</Button>
+                            <Button
+                                onClick={handleSubmit}
+                                bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                fontWeight="bold"
+                                fontSize="md"
+                                boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                            >
+                                {existingLog ? "Save" : "Add"}
+                            </Button>
                         </Dialog.Footer>
 
                         <Dialog.CloseTrigger />

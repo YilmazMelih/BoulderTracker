@@ -38,7 +38,13 @@ export default function SessionsPage() {
     }
 
     return (
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} spacing={4}>
+        <SimpleGrid
+            justifyItems="center"
+            maxWidth="1200px"
+            margin="32px auto 0"
+            gap="16px"
+            columns={{ base: 1, md: 2, lg: 3 }}
+        >
             <AddSessionCard onClick={handleCreate} />
             {sessions.map((session) => (
                 <SessionCard

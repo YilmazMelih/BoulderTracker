@@ -61,43 +61,68 @@ export default function ClimbModal({ isOpen, onClose, onSubmit, climb, onDelete 
             onOpenChange={(e) => {
                 if (!e.open) onClose();
             }}
+            size="lg"
         >
             <Portal>
                 <Dialog.Backdrop />
                 <Dialog.Positioner>
-                    <Dialog.Content>
+                    <Dialog.Content boxShadow="0px 3px 5px 0px rgba(135,93,61,0.45)">
                         <Dialog.Header>
-                            <Dialog.Title>{climb ? "Edit Climb" : "Add Climb"}</Dialog.Title>
+                            <Dialog.Title fontSize="2xl">
+                                {climb ? "Edit Climb" : "Add Climb"}
+                            </Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
-                            <Field.Root>
-                                <Field.Label>Name</Field.Label>
+                            <Field.Root mb="8px">
+                                <Field.Label fontSize="lg" fontWeight="bold">
+                                    Name
+                                </Field.Label>
                                 <Input
+                                    fontSize="md"
+                                    border="none"
+                                    bg="#ffffff"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
                                     placeholder="Green Overhang"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </Field.Root>
-                            <Field.Root>
-                                <Field.Label>Grade</Field.Label>
+                            <Field.Root mb="8px">
+                                <Field.Label fontSize="lg" fontWeight="bold">
+                                    Grade
+                                </Field.Label>
                                 <SegmentGroup.Root
+                                    w="100%"
                                     defaultValue={grade.toUpperCase()}
                                     onValueChange={(val) => setGrade(val.value)}
                                     value={grade.toUpperCase()}
+                                    border="none"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
                                 >
                                     <SegmentGroup.Indicator />
-                                    <SegmentGroup.Items items={gradeOptions} />
+                                    <SegmentGroup.Items
+                                        w="100%"
+                                        cursor="pointer"
+                                        color="#482307"
+                                        items={gradeOptions}
+                                    />
                                 </SegmentGroup.Root>
                             </Field.Root>
                             <ColorPicker.Root
                                 defaultValue={parseColor(color)}
                                 onValueChange={(val) => setColor(val.value.toString("hex"))}
+                                mb="8px"
                             >
                                 <ColorPicker.HiddenInput />
-                                <ColorPicker.Label>Color</ColorPicker.Label>
+                                <ColorPicker.Label fontSize="lg" fontWeight="bold" color="#482307">
+                                    Color
+                                </ColorPicker.Label>
                                 <ColorPicker.Control>
-                                    <ColorPicker.Input />
-                                    <ColorPicker.Trigger />
+                                    <ColorPicker.Input boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)" />
+                                    <ColorPicker.Trigger
+                                        cursor="pointer"
+                                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                    />
                                 </ColorPicker.Control>
 
                                 <ColorPicker.Positioner>
@@ -113,14 +138,36 @@ export default function ClimbModal({ isOpen, onClose, onSubmit, climb, onDelete 
 
                         <Dialog.Footer>
                             {climb ? (
-                                <Button onClick={handleDelete} disabled={disabled}>
+                                <Button
+                                    onClick={handleDelete}
+                                    disabled={disabled}
+                                    bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                    fontWeight="bold"
+                                    fontSize="md"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                >
                                     Delete
                                 </Button>
                             ) : null}
                             <Dialog.ActionTrigger asChild>
-                                <Button>Cancel</Button>
+                                <Button
+                                    bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                    fontWeight="bold"
+                                    fontSize="md"
+                                    boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                >
+                                    Cancel
+                                </Button>
                             </Dialog.ActionTrigger>
-                            <Button onClick={handleSubmit}>{climb ? "Save" : "Add"}</Button>
+                            <Button
+                                bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                                fontWeight="bold"
+                                fontSize="md"
+                                boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                                onClick={handleSubmit}
+                            >
+                                {climb ? "Save" : "Add"}
+                            </Button>
                         </Dialog.Footer>
 
                         <Dialog.CloseTrigger />
