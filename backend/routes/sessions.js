@@ -63,9 +63,10 @@ router.get("/", authenticateToken, async (req, res) => {
         params.push(from);
     }
     if (to) {
-        query += ` AND DATE <= ?`;
+        query += ` AND date <= ?`;
         params.push(to);
     }
+    query += ` ORDER BY date DESC`;
 
     let db;
     try {

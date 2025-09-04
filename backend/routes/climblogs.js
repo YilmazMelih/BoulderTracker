@@ -169,12 +169,11 @@ router.put("/:logId", authenticateToken, async (req, res) => {
         } else if (JSON.parse(oldLog.flashed) && topped != undefined && !topped) {
             return res.status(400).json({ message: "Topped must be true if flashed" });
         }
-
         //Update log with new fields, return updated log
         await db.run(`UPDATE climb_logs SET attempts=?, flashed=?, topped=? WHERE id=?`, [
             attempts || oldLog.attempts,
-            flashed || oldLog.flashed,
-            topped || oldLog.topped,
+            flashed ?? oldLog.flashed,
+            topped ?? oldLog.topped,
             logId,
         ]);
         const newLog = await db.get(`SELECT * FROM climb_logs WHERE id=?`, logId);
