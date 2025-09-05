@@ -1,8 +1,9 @@
-import { Box, Input, Button, VStack } from "@chakra-ui/react";
+import { Box, Input, Button, VStack, Heading, Link } from "@chakra-ui/react";
 import { authLogin, checkTokenExpired, authLogout } from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
+import { Mountain } from "lucide-react";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -36,38 +37,47 @@ export default function LoginPage() {
             alignItems="center"
             justifyContent="center"
         >
-            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-                <VStack gap="8px">
-                    <Input
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        border="none"
-                        bg="#ffffff"
-                        fontSize="md"
-                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
-                    />
-                    <Input
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        border="none"
-                        bg="#ffffff"
-                        fontSize="md"
-                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
-                    />
-                    <Button
-                        type="submit"
-                        w="100%"
-                        bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
-                        fontWeight="bold"
-                        fontSize="md"
-                        boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
-                    >
-                        Login
-                    </Button>
-                </VStack>
-            </form>
+            <VStack w={"100%"}>
+                <Heading display={"flex"} fontSize="3xl">
+                    <Mountain size={"28px"} />
+                    BoulderTracker
+                </Heading>
+                <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+                    <VStack gap="8px">
+                        <Input
+                            name="email"
+                            type="email"
+                            placeholder="Email"
+                            border="none"
+                            bg="#ffffff"
+                            fontSize="md"
+                            boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                        />
+                        <Input
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            border="none"
+                            bg="#ffffff"
+                            fontSize="md"
+                            boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                        />
+                        <Button
+                            type="submit"
+                            w="100%"
+                            bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
+                            fontWeight="bold"
+                            fontSize="md"
+                            boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
+                        >
+                            Login
+                        </Button>
+                        <Link href="/signup" color="#482307">
+                            Don't have an account? Sign Up
+                        </Link>
+                    </VStack>
+                </form>
+            </VStack>
         </Box>
     );
 }
