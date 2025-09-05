@@ -18,6 +18,12 @@ export default function AddSessionCard({ onClick }) {
             <Text pt="8px" ml="8px" fontSize="2xl" color="rgba(72, 35, 7, 0.45)">
                 Session on: ?
             </Text>
+            <Text ml="8px" fontSize="xl" color="rgba(72, 35, 7, 0.45)">
+                # Climbs
+            </Text>
+            <Text ml="8px" fontSize="xl" color="rgba(72, 35, 7, 0.45)">
+                # Tops
+            </Text>
             <AbsoluteCenter
                 h="80px"
                 w="80px"

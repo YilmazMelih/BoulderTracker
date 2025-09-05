@@ -17,6 +17,12 @@ export default function SessionCard({ session, onClick }) {
             <Text pt="8px" ml="8px" fontSize="2xl">
                 Session on: {session ? session.date.slice(0, 10) : null}
             </Text>
+            <Text ml="8px" fontSize="xl">
+                {session.climbs} Climbs
+            </Text>
+            <Text ml="8px" fontSize="xl">
+                {session.tops} Tops
+            </Text>
         </Box>
     );
 }

@@ -54,7 +54,6 @@ export async function setupDB() {
         FOREIGN KEY (climb_id) REFERENCES climbs(id) ON DELETE CASCADE
         )
         `);
-    console.log("Tables created");
 
     await db.close();
 }

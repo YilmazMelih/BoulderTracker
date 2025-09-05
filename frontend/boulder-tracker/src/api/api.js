@@ -46,6 +46,7 @@ export async function apiFetchSessions() {
                 Authorization: `Bearer ${token}`,
             },
         });
+        console.log(res.data);
         return res.data;
     } catch (err) {
         return handleError(err);

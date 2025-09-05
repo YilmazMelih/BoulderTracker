@@ -51,7 +51,7 @@ router.post("/", authenticateToken, async (req, res) => {
 //GET route, returns all sessions belonging to user if authenticated
 router.get("/", authenticateToken, async (req, res) => {
     //Build query using query params
-    let query = `SELECT * FROM sessions WHERE user_id=?`;
+    let query = `SELECT S.*, COUNT(L.id) AS climbs, SUM(CASE WHEN L.topped = 1 THEN 1 ELSE 0 END) AS tops FROM sessions S LEFT JOIN climb_logs L ON L.session_id = S.id WHERE user_id=? GROUP BY S.id`;
     let params = [req.user.userId];
     const { on, to, from } = req.query;
     if (on) {
