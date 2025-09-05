@@ -43,6 +43,7 @@ export default function ClimbsPage() {
             const res = await apiEditClimb(name, grade, color, photo_url, climb_id);
             if (!res.error) {
                 setModalState(false);
+                setModalClimb(null);
                 const data = await apiFetchClimbs();
                 if (!data.error) {
                     setClimbs(data.climbs);
@@ -57,11 +58,11 @@ export default function ClimbsPage() {
             if (!res.error) {
                 setClimbs((prev) => [...prev, res.climb]);
                 setModalState(false);
+                setModalClimb(null);
             } else {
                 toast.error(res.error);
             }
         }
-        setModalClimb(null);
     }
 
     async function handleDelete(climb_id) {

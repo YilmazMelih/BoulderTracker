@@ -62,6 +62,8 @@ export default function SessionDetailsPage() {
             const res = await apiEditLog(id, log_id, attempts, flashed, topped);
             if (!res.error) {
                 setSelectLogModalOpen(false);
+                setSelectedClimb(null);
+                setSelectedLog(null);
                 fetch();
             } else {
                 toast.error(res.error);
@@ -71,12 +73,12 @@ export default function SessionDetailsPage() {
             if (!res.error) {
                 fetch();
                 setSelectLogModalOpen(false);
+                setSelectedClimb(null);
+                setSelectedLog(null);
             } else {
                 toast.error(res.error);
             }
         }
-        setSelectedClimb(null);
-        setSelectedLog(null);
     }
 
     async function handleDelete(log_id) {

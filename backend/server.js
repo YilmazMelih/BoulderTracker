@@ -9,7 +9,7 @@ import sessionsRouter from "./routes/sessions.js";
 
 //Database debug
 
-// setupDB().catch((err) => console.error(err));
+setupDB().catch((err) => console.error(err));
 
 const PORT = 3001;
 
@@ -20,7 +20,7 @@ app.use("/auth", authRouter);
 app.use("/api/climbs", climbsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.get("/", (req, res) => {
-    res.send(`{ message: API IS RUNNING }`);
+    res.json(`{ message: API IS RUNNING }`);
 });
 
 app.listen(PORT, () => {
