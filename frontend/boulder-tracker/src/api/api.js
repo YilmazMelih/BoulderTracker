@@ -2,11 +2,11 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 const auth = axios.create({
-    baseURL: `http://localhost:3001/auth`,
+    baseURL: `https://bouldertracker.onrender.com/auth`,
 });
 
 const api = axios.create({
-    baseURL: `http://localhost:3001/api`,
+    baseURL: `https://bouldertracker.onrender.com/api`,
 });
 
 export async function authLogin(email, password) {
