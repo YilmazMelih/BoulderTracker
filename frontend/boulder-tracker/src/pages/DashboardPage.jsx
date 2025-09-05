@@ -99,7 +99,7 @@ export default function DashboardPage() {
                         </Button>
                     </VStack>
                 </Box>
-                <Box w="330px">
+                <Box>
                     <Text textAlign="center" fontSize="2xl" fontWeight="bold" mb="8px">
                         Climbs from previous Sessions
                     </Text>
@@ -109,7 +109,7 @@ export default function DashboardPage() {
                         <Text>No sessions yet...</Text>
                     )}
                 </Box>
-                <Box>
+                <Box w="330px">
                     <Text fontSize="2xl" fontWeight="bold" mb="8px">
                         {sessions.length != 0 ? "Latest Session" : "Start a Session"}
                     </Text>
