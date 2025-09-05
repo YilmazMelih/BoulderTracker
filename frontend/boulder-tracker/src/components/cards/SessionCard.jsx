@@ -15,7 +15,7 @@ export default function SessionCard({ session, onClick }) {
             boxShadow="0px 3px 5px 0px rgba(135,93,61,0.45)"
         >
             <Text pt="8px" ml="8px" fontSize="2xl">
-                Session on: {session.date.slice(0, 10)}
+                Session on: {session ? session.date.slice(0, 10) : null}
             </Text>
         </Box>
     );

@@ -21,10 +21,6 @@ export default function ClimbsPage() {
     const [modalState, setModalState] = useState(false);
     const [modalClimb, setModalClimb] = useState(null);
 
-    if (checkTokenExpired()) {
-        navigate("/login");
-    }
-
     const fetch = async () => {
         const data = await apiFetchClimbs();
         if (!data.error) {
@@ -35,6 +31,9 @@ export default function ClimbsPage() {
     };
 
     useEffect(() => {
+        if (checkTokenExpired()) {
+            navigate("/login");
+        }
         fetch();
     }, [token]);
 

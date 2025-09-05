@@ -2,12 +2,15 @@ import { Box, Input, Button, VStack } from "@chakra-ui/react";
 import { authLogin, checkTokenExpired, authLogout } from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useEffect } from "react";
 
 export default function LoginPage() {
     const navigate = useNavigate();
-    if (!checkTokenExpired()) {
-        navigate("/dashboard");
-    }
+    useEffect(() => {
+        if (!checkTokenExpired()) {
+            navigate("/dashboard");
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

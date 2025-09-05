@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 
-export default function SessionCard({ climb, onClick }) {
+export default function ClimbCard({ climb, onClick }) {
     const darkenColor = (color, percent) => {
         const hex = color.replace("#", "");
 

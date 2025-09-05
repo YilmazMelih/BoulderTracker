@@ -1,13 +1,17 @@
 import { Box, Input, Button, VStack } from "@chakra-ui/react";
 import { authSignup, authLogout, checkTokenExpired } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 export default function SignupPage() {
     const navigate = useNavigate();
-    if (!checkTokenExpired()) {
-        navigate("/dashboard");
-    }
+    useEffect(() => {
+        if (!checkTokenExpired()) {
+            navigate("/dashboard");
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);

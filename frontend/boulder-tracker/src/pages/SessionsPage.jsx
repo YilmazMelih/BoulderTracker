@@ -12,11 +12,10 @@ export default function SessionsPage() {
     const token = localStorage.getItem("token");
     const [sessions, setSessions] = useState([]);
 
-    if (checkTokenExpired()) {
-        navigate("/login");
-    }
-
     useEffect(() => {
+        if (checkTokenExpired()) {
+            navigate("/login");
+        }
         const fetch = async () => {
             const data = await apiFetchSessions();
             if (!data.error) {

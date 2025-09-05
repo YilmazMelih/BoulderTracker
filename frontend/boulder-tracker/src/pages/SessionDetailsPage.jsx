@@ -28,11 +28,10 @@ export default function SessionDetailsPage() {
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [disabled, setDisabled] = useState(false);
 
-    if (checkTokenExpired()) {
-        navigate("/login");
-    }
-
     const fetch = async () => {
+        if (checkTokenExpired()) {
+            navigate("/login");
+        }
         const data = await apiFetchSessionDet(id);
         if (!data.error) {
             setLogs(data.logs);
