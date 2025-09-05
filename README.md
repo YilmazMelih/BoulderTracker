@@ -1,4 +1,4 @@
-# 🧗 BoulderTracker  
+# 🧗 [BoulderTracker](https://bouldertracker.vercel.app)
 
 BoulderTracker is a full-stack web application for tracking climbing sessions, logging attempts, and managing climbs. Built with **Node.js, Express, SQLite**, and a **React + Vite frontend**, it provides climbers with an easy way to record progress, review past sessions, and analyze performance over time.  
 
