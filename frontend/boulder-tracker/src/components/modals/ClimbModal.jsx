@@ -1,4 +1,5 @@
 import {
+    Box,
     Dialog,
     Field,
     Portal,
@@ -91,7 +92,9 @@ export default function ClimbModal({ isOpen, onClose, onSubmit, climb, onDelete 
                                 <Field.Label fontSize="lg" fontWeight="bold">
                                     Grade
                                 </Field.Label>
+
                                 <SegmentGroup.Root
+                                    size={{ base: "xs", xs: "sm", sm: "md" }}
                                     w="100%"
                                     defaultValue={grade.toUpperCase()}
                                     onValueChange={(val) => setGrade(val.value)}

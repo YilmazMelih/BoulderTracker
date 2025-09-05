@@ -44,7 +44,7 @@ export default function DashboardPage() {
     return (
         <>
             <Navbar />
-            <Heading fontSize="64px" lineHeight="64px" w="800px" margin="48px auto">
+            <Heading fontSize="64px" lineHeight="64px" maxW="800px" margin="48px auto">
                 Hello, {usernameCapitalized}
             </Heading>
             <SimpleGrid
@@ -99,8 +99,8 @@ export default function DashboardPage() {
                         </Button>
                     </VStack>
                 </Box>
-                <Box>
-                    <Text fontSize="2xl" fontWeight="bold" mb="8px">
+                <Box w="330px">
+                    <Text textAlign="center" fontSize="2xl" fontWeight="bold" mb="8px">
                         Climbs from previous Sessions
                     </Text>
                     {sessions.length != 0 ? (

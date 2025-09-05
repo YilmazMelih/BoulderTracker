@@ -20,9 +20,9 @@ export default function GraphPlaceholder(props) {
     });
 
     return (
-        <Box w="330px" h="200px">
+        <Box>
             <Chart.Root chart={chart} bg="rgba(255, 255, 255, 0.5)">
-                <BarChart data={chart.data} margin={{ top: 45, right: 45 }}>
+                <BarChart data={chart.data} margin={{ top: 45, right: 55 }}>
                     <CartesianGrid stroke="#482307" vertical={false} />
                     <XAxis axisLine={false} tickLine={false} dataKey={chart.key("date")} />
                     <YAxis axisLine={false} tickLine={false} domain={[0, 30]} />
