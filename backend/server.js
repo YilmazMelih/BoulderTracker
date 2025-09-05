@@ -11,7 +11,7 @@ import sessionsRouter from "./routes/sessions.js";
 
 setupDB().catch((err) => console.error(err));
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 app.use(cors());
@@ -20,7 +20,7 @@ app.use("/auth", authRouter);
 app.use("/api/climbs", climbsRouter);
 app.use("/api/sessions", sessionsRouter);
 app.get("/", (req, res) => {
-    res.json(`{ message: API IS RUNNING }`);
+    res.json({ message: "API IS RUNNING" });
 });
 
 app.listen(PORT, () => {
