@@ -1,6 +1,7 @@
 import AddClimbCard from "../components/cards/AddClimbCard.jsx";
 import ClimbCard from "../components/cards/ClimbCard.jsx";
 import ClimbModal from "../components/modals/ClimbModal.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { SimpleGrid } from "@chakra-ui/react";
 import {
     apiFetchClimbs,
@@ -77,6 +78,7 @@ export default function ClimbsPage() {
 
     return (
         <>
+            <Navbar />
             <SimpleGrid
                 justifyItems="center"
                 maxWidth="1200px"

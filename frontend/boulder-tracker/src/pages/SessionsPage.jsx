@@ -1,5 +1,6 @@
 import AddSessionCard from "../components/cards/AddSessionCard.jsx";
 import SessionCard from "../components/cards/SessionCard.jsx";
+import Navbar from "../components/Navbar.jsx";
 import { SimpleGrid } from "@chakra-ui/react";
 import { apiFetchSessions, apiCreateSession, checkTokenExpired } from "../api/api.js";
 import { useState, useEffect } from "react";
@@ -38,21 +39,24 @@ export default function SessionsPage() {
     }
 
     return (
-        <SimpleGrid
-            justifyItems="center"
-            maxWidth="1200px"
-            margin="32px auto 0"
-            gap="16px"
-            columns={{ base: 1, md: 2, lg: 3 }}
-        >
-            <AddSessionCard onClick={handleCreate} />
-            {sessions.map((session) => (
-                <SessionCard
-                    key={session.id}
-                    session={session}
-                    onClick={() => navigate(`/sessions/${session.id}`)}
-                />
-            ))}
-        </SimpleGrid>
+        <>
+            <Navbar />
+            <SimpleGrid
+                justifyItems="center"
+                maxWidth="1200px"
+                margin="32px auto 0"
+                gap="16px"
+                columns={{ base: 1, md: 2, lg: 3 }}
+            >
+                <AddSessionCard onClick={handleCreate} />
+                {sessions.map((session) => (
+                    <SessionCard
+                        key={session.id}
+                        session={session}
+                        onClick={() => navigate(`/sessions/${session.id}`)}
+                    />
+                ))}
+            </SimpleGrid>
+        </>
     );
 }

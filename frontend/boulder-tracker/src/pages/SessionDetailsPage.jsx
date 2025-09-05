@@ -1,8 +1,9 @@
 import AddLogCard from "../components/cards/AddLogCard.jsx";
 import ClimbLogCard from "../components/cards/ClimbLogCard.jsx";
 import AddLogModal from "../components/modals/AddLogModal.jsx";
+import Navbar from "../components/Navbar.jsx";
 import SelectClimbModal from "../components/modals/SelectClimbModal.jsx";
-import { SimpleGrid, Button, Box } from "@chakra-ui/react";
+import { SimpleGrid, Button } from "@chakra-ui/react";
 import {
     apiFetchSessionDet,
     apiCreateLog,
@@ -105,7 +106,8 @@ export default function SessionDetailsPage() {
     }
 
     return (
-        <Box position="relative" h="100vh" border="1px solid red">
+        <>
+            <Navbar />
             <SimpleGrid
                 justifyItems="center"
                 maxWidth="1200px"
@@ -132,7 +134,7 @@ export default function SessionDetailsPage() {
                 ))}
             </SimpleGrid>
             <Button
-                position="absolute"
+                position="fixed"
                 bottom="32px"
                 right="32px"
                 bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
@@ -149,7 +151,7 @@ export default function SessionDetailsPage() {
                 Delete
             </Button>
             <Button
-                position="absolute"
+                position="fixed"
                 bottom="32px"
                 left="32px"
                 bg="linear-gradient(180deg, #764d2fff 0%, #56341cff 100%)"
@@ -184,6 +186,6 @@ export default function SessionDetailsPage() {
                 onDelete={handleDelete}
                 existingLog={selectedLog}
             />
-        </Box>
+        </>
     );
 }
