@@ -15,6 +15,7 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
+import { recordStats } from "framer-motion";
 
 export default function SessionDetailsPage() {
     const navigate = useNavigate();
@@ -92,8 +93,12 @@ export default function SessionDetailsPage() {
 
     async function handleSeshDelete() {
         if (deleteConfirm) {
-            await apiDeleteSesh(id);
-            navigate("/sessions");
+            const res = await apiDeleteSesh(id);
+            if (!res.error) {
+                navigate("/sessions");
+            } else {
+                toast.error(res.error);
+            }
         } else {
             setDisabled(true);
             toast("Are you you want to delete this session?");

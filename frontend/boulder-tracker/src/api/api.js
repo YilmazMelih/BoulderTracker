@@ -209,6 +209,22 @@ export async function apiDeleteClimb(climb_id) {
     }
 }
 
+export async function authDeleteUser() {
+    const token = localStorage.getItem("token");
+    const decoded = jwtDecode(token);
+    try {
+        const res = await auth.delete(`/delete/${decoded.userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        authLogout();
+        return res.data;
+    } catch (err) {
+        return handleError(err);
+    }
+}
+
 export async function apiDeleteSession(session_id) {
     const token = localStorage.getItem("token");
 
@@ -257,7 +273,6 @@ export async function apiDeleteLog(id, log_id) {
 export function checkTokenExpired() {
     const token = localStorage.getItem("token");
     if (!token) {
-        console.log("token dne");
         return true;
     }
     const decoded = jwtDecode(token);

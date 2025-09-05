@@ -43,7 +43,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/account"
+                    path="/profile"
                     element={
                         <ProtectedRoute>
                             <AccountPage />

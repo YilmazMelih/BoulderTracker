@@ -30,7 +30,6 @@ export default function DashboardPage() {
     async function handleCreate() {
         const res = await apiCreateSession();
         if (!res.error) {
-            console.log(res);
             navigate(`/sessions/${res.session.id}`);
         } else {
             toast.error(res.error);
@@ -103,9 +102,9 @@ export default function DashboardPage() {
                 <GraphPlaceholder />
                 <Box w="330px">
                     <Text fontSize="2xl" fontWeight="bold" mb="8px">
-                        {sessions ? "Latest Session" : "Start a Session"}
+                        {sessions.length != 0 ? "Latest Session" : "Start a Session"}
                     </Text>
-                    {sessions ? (
+                    {sessions.length != 0 ? (
                         <SessionCard
                             session={sessions[0]}
                             onClick={() => {
