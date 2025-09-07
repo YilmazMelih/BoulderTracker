@@ -6,6 +6,7 @@ import SessionsPage from "./pages/SessionsPage.jsx";
 import ClimbsPage from "./pages/ClimbsPage.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import SessionDetailsPage from "./pages/SessionDetailsPage.jsx";
+import { Analytics } from "@vercel/analytics/react";
 import { checkTokenExpired } from "./api/api.js";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
 
     return (
         <Router>
+            <Analytics />
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
