@@ -10,7 +10,7 @@ export default function Navbar() {
             bg="linear-gradient(180deg, #fffdf9ff 0%, #fff8e6 100%)"
             boxShadow="0px 2px 5px 0px rgba(135,93,61,0.45)"
         >
-            <Link href="/" fontSize="2xl" ml="16px" color="#482307" fontWeight={"bold"}>
+            <Link href="/dashboard" fontSize="2xl" ml="16px" color="#482307" fontWeight={"bold"}>
                 <Mountain /> BoulderTracker
             </Link>
             <Spacer />

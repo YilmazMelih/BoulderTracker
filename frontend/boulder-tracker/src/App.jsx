@@ -6,6 +6,7 @@ import SessionsPage from "./pages/SessionsPage.jsx";
 import ClimbsPage from "./pages/ClimbsPage.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import SessionDetailsPage from "./pages/SessionDetailsPage.jsx";
+import LandingPage from "./pages/LandingPage.jsx";
 import { Analytics } from "@vercel/analytics/react";
 import { checkTokenExpired } from "./api/api.js";
 
@@ -18,6 +19,7 @@ function App() {
         <Router>
             <Analytics />
             <Routes>
+                <Route path="/landing" element={<LandingPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route
@@ -60,7 +62,7 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
-                <Route path="*" element={<Navigate to="/dashboard" />} />
+                <Route path="*" element={<Navigate to="/landing" />} />
             </Routes>
         </Router>
     );
